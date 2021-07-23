@@ -135,7 +135,7 @@
         </size>
        </property>
        <property name="currentIndex">
-        <number>1</number>
+        <number>3</number>
        </property>
        <widget class="QWidget" name="home">
         <widget class="QLabel" name="label">
@@ -407,11 +407,73 @@ color: rgb(255, 0, 0);</string>
         <property name="styleSheet">
          <string notr="true">background-color: blue</string>
         </property>
+        <widget class="QLabel" name="video_main">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>10</y>
+           <width>351</width>
+           <height>221</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="video_masked">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>170</y>
+           <width>341</width>
+           <height>51</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="capture_btn">
+         <property name="geometry">
+          <rect>
+           <x>270</x>
+           <y>240</y>
+           <width>80</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>capture</string>
+         </property>
+        </widget>
        </widget>
        <widget class="QWidget" name="yellow">
         <property name="styleSheet">
          <string notr="true">background-color: yellow</string>
         </property>
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="geometry">
+          <rect>
+           <x>9</x>
+           <y>10</y>
+           <width>361</width>
+           <height>231</height>
+          </rect>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>359</width>
+            <height>229</height>
+           </rect>
+          </property>
+         </widget>
+        </widget>
        </widget>
       </widget>
      </item>

@@ -1,20 +1,29 @@
 import os
 import cv2
-import time
-from pathlib import Path
 import sys
 from sqlite3 import connect
-
+from PIL import Image
 import numpy as np
+from PIL.ImageQt import ImageQt
 from PySide6.QtCore import QThread, Signal
-from PySide6.QtGui import QIcon
+from PySide6.QtCore import *
+from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtWidgets import QApplication, QWidget, QStackedWidget, QDialog, QTableWidgetItem, QVBoxLayout
 from PySide6.QtUiTools import QUiLoader
 
 
+def convertCvImage2QtImage(cv_image):
+    rgb_image = cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB)
+    PIL_image = Image.fromarray(rgb_image).convert('RGB')
+    return QPixmap.fromImage(ImageQt(PIL_image)).scaled(480, 360, Qt.KeepAspectRatio)
+
+
 class Camera(QThread):
+    frame_signal = Signal(object, object)
+
     def __init__(self):
         super(Camera, self).__init__()
+        # self.frame_signal = Signal()
 
     def make_masks(self, image):
         # w, h = image.shape
@@ -127,8 +136,12 @@ class Camera(QThread):
             self.frame_masked = self.make_masks(self.frame)
 
             if flag:
-                cv2.imshow('pic', self.frame_masked)
-                cv2.setMouseCallback('pic', self.save_pic)
+                # cv2.imshow('pic', self.frame_masked)
+                self.frame_signal.emit(self.frame, self.frame_masked)
+                # cv2.setMouseCallback('pic', self.save_pic)
+                # window.ui.stackedWidget.setCurrentWidget(window.ui.blue)
+                # self.frame = convertCvImage2QtImage(self.frame)
+                # window.ui.video_main.setPixmap(self.frame)
 
 
 # ****************************************************************************************
@@ -149,9 +162,6 @@ class MainWindow(QWidget):
 
         self.webcam = Camera()
         self.picture_signal = Signal()
-
-    def show_blue(self):
-        self.ui.stackedWidget.setCurrentWidget(self.ui.blue)
 
     def show_red(self):
         self.ui.stackedWidget.setCurrentWidget(self.ui.red)
@@ -227,13 +237,20 @@ class MainWindow(QWidget):
         self.ui.stackedWidget.setCurrentWidget(self.ui.home)
 
     def camera(self):
+        # self.ui.stackedWidget.setCurrentWidget(self.ui.blue)
+        self.webcam.frame_signal.connect(self.show_blue)
         self.webcam.start()
+
+    def show_blue(self, frame, frame_masked):
+        self.ui.stackedWidget.setCurrentWidget(self.ui.blue)
+        frame = convertCvImage2QtImage(frame)
+        self.ui.video_main.setPixmap(frame)
 
     # def record_picture(self):
     #     self.picture_signal.emit()
 
 
 if __name__ == "__main__":
-    app = QApplication([])
+    app = QApplication(sys.argv)
     window = MainWindow()
     sys.exit(app.exec())
